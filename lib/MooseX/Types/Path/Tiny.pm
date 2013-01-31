@@ -12,12 +12,16 @@ use MooseX::Types::Moose qw/Str ArrayRef/;
 use MooseX::Types -declare => [qw( Path AbsPath File AbsFile Dir AbsDir )];
 use Path::Tiny ();
 
+#<<<
 subtype Path,    as 'Path::Tiny';
-subtype File,    as Path, where { $_->is_file };
-subtype Dir,     as Path, where { $_->is_dir };
 subtype AbsPath, as Path, where { $_->is_absolute };
-subtype AbsFile, as Path, where { $_->is_absolute && $_->is_file };
-subtype AbsDir,  as Path, where { $_->is_absolute && $_->is_dir };
+
+subtype File,    as Path, where { $_->is_file }, message { "File '$_' does not exist" };
+subtype Dir,     as Path, where { $_->is_dir },  message { "Directory '$_' does not exist" };
+
+subtype AbsFile, as AbsPath, where { $_->is_file }, message { "File '$_' does not exist" };
+subtype AbsDir,  as AbsPath, where { $_->is_dir },  message { "Directory '$_' does not exist" };
+#>>>
 
 for my $type ( 'Path::Tiny', Path, File, Dir ) {
     coerce(
