@@ -32,41 +32,119 @@ my $tf = File::Temp->new;
 my $td = File::Temp->newdir;
 
 my @cases = (
+    # Path
     {
-        label    => "coerce string to path",
+        label    => "coerce string to Path",
         absolute => 0,
         attr     => "a_path",
         input    => "./foo",
     },
     {
-        label    => "coerce object to path",
+        label    => "coerce object to Path",
         absolute => 0,
         attr     => "a_path",
         input    => $tf,
     },
     {
-        label    => "coerce array ref to path",
+        label    => "coerce array ref to Path",
         absolute => 0,
         attr     => "a_path",
         input    => [qw/foo bar/],
     },
+    # AbsPath
     {
-        label    => "coerce string to absolute path",
+        label    => "coerce string to AbsPath",
         absolute => 1,
         attr     => "a_path",
         input    => "./foo",
     },
     {
-        label    => "coerce object to absolute path",
+        label    => "coerce object to AbsPath",
         absolute => 1,
         attr     => "a_path",
         input    => $tf,
     },
     {
-        label    => "coerce array ref to absolute path",
+        label    => "coerce array ref to AbsPath",
         absolute => 1,
         attr     => "a_path",
         input    => [qw/foo bar/],
+    },
+    # File
+    {
+        label    => "coerce string to File",
+        absolute => 0,
+        attr     => "a_file",
+        input    => "$tf",
+    },
+    {
+        label    => "coerce object to File",
+        absolute => 0,
+        attr     => "a_file",
+        input    => $tf,
+    },
+    {
+        label    => "coerce array ref to File",
+        absolute => 0,
+        attr     => "a_file",
+        input    => [$tf],
+    },
+    # Dir
+    {
+        label    => "coerce string to Dir",
+        absolute => 0,
+        attr     => "a_dir",
+        input    => "$td",
+    },
+    {
+        label    => "coerce object to Dir",
+        absolute => 0,
+        attr     => "a_dir",
+        input    => $td,
+    },
+    {
+        label    => "coerce array ref to Dir",
+        absolute => 0,
+        attr     => "a_dir",
+        input    => [$td],
+    },
+    # AbsFile
+    {
+        label    => "coerce string to AbsFile",
+        absolute => 1,
+        attr     => "a_file",
+        input    => "$tf",
+    },
+    {
+        label    => "coerce object to AbsFile",
+        absolute => 1,
+        attr     => "a_file",
+        input    => $tf,
+    },
+    {
+        label    => "coerce array ref to AbsFile",
+        absolute => 1,
+        attr     => "a_file",
+        input    => [$tf],
+    },
+    # AbsDir
+    {
+        label    => "coerce string to AbsDir",
+        absolute => 1,
+        attr     => "a_dir",
+        input    => "$td",
+    },
+    {
+        label    => "coerce object to AbsDir",
+        absolute => 1,
+        attr     => "a_dir",
+        input    => $td,
+    },
+    {
+        label    => "coerce array ref to AbsDir",
+        absolute => 1,
+        attr     => "a_dir",
+        input    => [$td],
     },
 );
 
