@@ -1,4 +1,4 @@
-use 5.008001;
+use 5.010;
 use strict;
 use warnings;
 
@@ -8,9 +8,9 @@ package MooseX::Types::Path::Tiny;
 
 use Moose;
 use MooseX::Types::Stringlike qw/Stringable/;
-use Path::Tiny ();
 use MooseX::Types::Moose qw/Str ArrayRef/;
 use MooseX::Types -declare => [qw( Path AbsPath File AbsFile Dir AbsDir )];
+use Path::Tiny ();
 
 subtype Path,    as 'Path::Tiny';
 subtype File,    as Path, where { $_->is_file };
@@ -83,6 +83,8 @@ two important types of coercion:
 * coercing objects with overloaded stringification
 * coercing to absolute paths
 
+It also can check to ensure that files or directories exist.
+
 =head1 SUBTYPES
 
 This module uses L<MooseX::Types> to define the following subtypes.
@@ -96,7 +98,24 @@ objects with overloaded stringification may be coerced.
 
 C<AbsPath> is a subtype of C<Path> (above), but coerces to an absolute path.
 
+=head2 File, AbsFile
+
+These are just like C<Path> and C<AbsPath>, except they check C<-f> to ensure
+the file actually exists on the filesystem.
+
+=head2 Dir, AbsDir
+
+These are just like C<Path> and C<AbsPath>, except they check C<-d> to ensure
+the directory actually exists on the filesystem.
+
 =head1 CAVEATS
+
+=head2 Path vs File vs Dir
+
+C<Path> just ensures you have a L<Path::Tiny> object.
+
+C<File> and C<Dir> check the filesystem.  Don't use them unless that's really
+what you want.
 
 =head2 Usage with File::Temp
 
