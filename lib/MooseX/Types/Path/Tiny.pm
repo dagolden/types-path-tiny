@@ -127,7 +127,7 @@ what you want.
 Be careful if you pass in a File::Temp object. Because the argument is
 stringified during coercion into a Path::Tiny object, no reference to the
 original File::Temp argument is held.  Be sure to hold an external reference to
-it to avoid immediate cleanup of the temporary file or diretory at the end of
+it to avoid immediate cleanup of the temporary file or directory at the end of
 the enclosing scope.
 
 A better approach is to use Path::Tiny's own C<tempfile> or C<tempdir>
