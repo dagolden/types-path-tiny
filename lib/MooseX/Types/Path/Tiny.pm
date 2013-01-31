@@ -31,6 +31,7 @@ for my $type ( 'Path::Tiny', Path, File, Dir ) {
 for my $type ( AbsPath, AbsFile, AbsDir ) {
     coerce(
         $type,
+        from 'Path::Tiny' => via { $_->absolute },
         from Str()        => via { Path::Tiny::path($_)->absolute },
         from Stringable() => via { Path::Tiny::path($_)->absolute },
         from ArrayRef()   => via { Path::Tiny::path(@$_)->absolute },

@@ -59,6 +59,12 @@ my @cases = (
         input    => "./foo",
     },
     {
+        label    => "coerce Path to AbsPath",
+        absolute => 1,
+        attr     => "a_path",
+        input    => path($tf),
+    },
+    {
         label    => "coerce object to AbsPath",
         absolute => 1,
         attr     => "a_path",
