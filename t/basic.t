@@ -9,32 +9,47 @@ use Path::Tiny;
 {
   package Foo;
   use Moose;
-  use MooseX::Types::Path::Tiny qw/Path/;
+  use MooseX::Types::Path::Tiny qw/Path File Dir/;
 
   has temp_file => ( is => 'ro', isa => Path, coerce => 1 );
+  has a_file => ( is => 'ro', isa => File, coerce => 1 );
+  has a_dir => ( is => 'ro', isa => Dir, coerce => 1 );
 }
 
 {
   package AbsFoo;
   use Moose;
-  use MooseX::Types::Path::Tiny qw/AbsPath/;
+  use MooseX::Types::Path::Tiny qw/AbsPath AbsFile AbsDir/;
 
   has temp_file => ( is => 'ro', isa => AbsPath, coerce => 1 );
+  has a_file => ( is => 'ro', isa => AbsFile, coerce => 1 );
+  has a_dir => ( is => 'ro', isa => AbsDir, coerce => 1 );
 }
 
 my $tf = File::Temp->new;
 
-subtest "coerce stringable objects" => sub {
-  my $obj = eval {
-    Foo->new(
-      temp_file => $tf,
-    )
-  };
+my @cases = (
+    {
+        label => "coerce string to path",
+        class => 'Foo',
+        attr => 'temp_file',
+        input => $tf,
+        result => "$tf",
+    }
+);
 
-  is( $@, '', "object created without exception" );
-  isa_ok( $obj->temp_file, "Path::Tiny", "temp_file" );
-  is( $obj->temp_file, $tf, "temp_file set correctly" );
-};
+for my $c ( @cases ) {
+    subtest $c->{label} => sub {
+        my $attr = $c->{attr};
+        my $obj = eval {
+            $c->{class}->new( $c->{attr} => $c->{input} );
+        };
+
+        is( $@, '', "object created without exception" );
+        isa_ok( $obj->$attr, "Path::Tiny", $attr );
+        is( $obj->$attr, $c->{result}, "$attr set correctly" );
+    };
+}
 
 subtest "coerce strings" => sub {
   my $wd = tempd;

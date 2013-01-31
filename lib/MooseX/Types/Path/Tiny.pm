@@ -9,12 +9,17 @@ package MooseX::Types::Path::Tiny;
 use Moose;
 use MooseX::Types::Stringlike qw/Stringable/;
 use Path::Tiny ();
-use MooseX::Types -declare => [qw( Path AbsPath )];
 use MooseX::Types::Moose qw/Str ArrayRef/;
+use MooseX::Types -declare => [qw( Path AbsPath File AbsFile Dir AbsDir )];
 
-subtype Path, as 'Path::Tiny';
+subtype Path,    as 'Path::Tiny';
+subtype File,    as Path, where { $_->is_file };
+subtype Dir,     as Path, where { $_->is_dir };
+subtype AbsPath, as Path, where { $_->is_absolute };
+subtype AbsFile, as Path, where { $_->is_absolute && $_->is_file };
+subtype AbsDir,  as Path, where { $_->is_absolute && $_->is_dir };
 
-for my $type ( 'Path::Tiny', Path ) {
+for my $type ( 'Path::Tiny', Path, File, Dir ) {
     coerce(
         $type,
         from Str()        => via { Path::Tiny::path($_) },
@@ -23,20 +28,21 @@ for my $type ( 'Path::Tiny', Path ) {
     );
 }
 
-subtype AbsPath, as Path, where { $_->is_absolute };
-
-coerce( AbsPath,
-    from Str()        => via { Path::Tiny::path($_)->absolute },
-    from Stringable() => via { Path::Tiny::path($_)->absolute },
-    from ArrayRef()   => via { Path::Tiny::path(@$_)->absolute },
-);
-
-# optionally add Getopt option type (adapted from MooseX::Types:Path::Class
-eval { require MooseX::Getopt; };
-if ( !$@ ) {
-    MooseX::Getopt::OptionTypeMap->add_option_type_to_map( $_, '=s', )
-      for ( 'Path::Tiny', Path );
+for my $type ( AbsPath, AbsFile, AbsDir ) {
+    coerce(
+        $type,
+        from Str()        => via { Path::Tiny::path($_)->absolute },
+        from Stringable() => via { Path::Tiny::path($_)->absolute },
+        from ArrayRef()   => via { Path::Tiny::path(@$_)->absolute },
+    );
 }
+
+### optionally add Getopt option type (adapted from MooseX::Types:Path::Class
+##eval { require MooseX::Getopt; };
+##if ( !$@ ) {
+##    MooseX::Getopt::OptionTypeMap->add_option_type_to_map( $_, '=s', )
+##      for ( 'Path::Tiny', Path );
+##}
 
 1;
 
