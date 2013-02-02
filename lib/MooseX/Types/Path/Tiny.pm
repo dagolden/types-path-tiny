@@ -11,6 +11,7 @@ use MooseX::Types::Stringlike qw/Stringable/;
 use MooseX::Types::Moose qw/Str ArrayRef/;
 use MooseX::Types -declare => [qw( Path AbsPath File AbsFile Dir AbsDir )];
 use Path::Tiny ();
+use MooseX::Types::Path::Class ();  # these types would conflict with our own
 
 #<<<
 subtype Path,    as 'Path::Tiny';
@@ -48,6 +49,33 @@ for my $type ( AbsPath, AbsFile, AbsDir ) {
 ##    MooseX::Getopt::OptionTypeMap->add_option_type_to_map( $_, '=s', )
 ##      for ( 'Path::Tiny', Path );
 ##}
+
+for my $type ( 'Path::Tiny', Path, File ) {
+    coerce(
+        $type,
+        from MooseX::Types::Path::Class::File, via { Path::Tiny::path($_) },
+    );
+}
+for my $type ( 'Path::Tiny', Path, Dir ) {
+    coerce(
+        $type,
+        from MooseX::Types::Path::Class::Dir, via { Path::Tiny::path($_) },
+    );
+}
+
+for my $type ( AbsPath, AbsFile ) {
+    coerce(
+        $type,
+        from MooseX::Types::Path::Class::File, via { Path::Tiny::path($_)->absolute },
+    );
+}
+for my $type ( AbsPath, AbsDir ) {
+    coerce(
+        $type,
+        from MooseX::Types::Path::Class::Dir, via { Path::Tiny::path($_)->absolute },
+    );
+}
+
 
 1;
 
