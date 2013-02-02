@@ -118,6 +118,8 @@ two important types of coercion:
 
 It also can check to ensure that files or directories exist.
 
+Coercions from Path::Class objects are also supported.
+
 =head1 SUBTYPES
 
 This module uses L<MooseX::Types> to define the following subtypes.
