@@ -2,6 +2,8 @@ Revision history for MooseX-Types-Path-Tiny
 
 {{$NEXT}}
 
+0.002     2013-02-12 09:35:41 America/New_York
+
     - Bump Moose version prereq to 2, just in case anyone out there still
       has version 1 installed.
 
