@@ -6,7 +6,7 @@ package MooseX::Types::Path::Tiny;
 # ABSTRACT: Path::Tiny types and coercions for Moose
 # VERSION
 
-use Moose;
+use Moose 2;
 use MooseX::Types::Stringlike qw/Stringable/;
 use MooseX::Types::Moose qw/Str ArrayRef/;
 use MooseX::Types -declare => [qw( Path AbsPath File AbsFile Dir AbsDir )];
