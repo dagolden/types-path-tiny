@@ -32,7 +32,8 @@ use Path::Tiny;
 
 my $err_re = qr/does not exist/;
 
-ok( exception { Foo->new( a_path => {} ) }, "Error on Path for {}" );
+like( exception { Foo->new( a_path => {} ) },
+    qr{not isa Path::Tiny}, "Error on Path for {}" );
 
 like( exception { Foo->new( a_file => "aalkdjalkdfs" ) },
     $err_re, "Error on File for nonexistent" );
@@ -40,7 +41,8 @@ like( exception { Foo->new( a_file => "aalkdjalkdfs" ) },
 like( exception { Foo->new( a_dir => "aalkdjalkdfs" ) },
     $err_re, "Error on Dir for nonexistent" );
 
-ok( exception { AbsFoo->new( a_path => {} ) }, "Error on Path for {}" );
+like( exception { AbsFoo->new( a_path => {} ) },
+    qr{not isa Path::Tiny}, "Error on Path for {}" );
 
 like( exception { AbsFoo->new( a_file => "aalkdjalkdfs" ) },
     $err_re, "Error on File for nonexistent" );

@@ -17,25 +17,36 @@ class_type Path, { class => "Path::Tiny" };
 
 declare AbsPath,
     as Path, where { $_->is_absolute },
-    inline_as { $_[0]->parent->inline_check($_) . "&& ${_}->is_absolute" };
+    inline_as { $_[0]->parent->inline_check($_) . "&& ${_}->is_absolute" },
+    message {
+        is_Path($_) ? "Path '$_' is not absolute" : Path->get_message($_);
+    };
 
 declare File,
     as Path, where { $_->is_file },
     inline_as { $_[0]->parent->inline_check($_) . "&& (-f $_)" },
-    message   { "File '$_' does not exist" };
+    message {
+        is_Path($_) ? "File '$_' does not exist" : Path->get_message($_);
+    };
 
 declare Dir,
     as Path, where { $_->is_dir },
     inline_as { $_[0]->parent->inline_check($_) . "&& (-d $_)" },
-    message   { "Directory '$_' does not exist" };
+    message {
+        is_Path($_) ? "Directory '$_' does not exist" : Path->get_message($_);
+    };
 
 declare AbsFile,
     as intersection([AbsPath, File]),
-    message { "File '$_' does not exist" };
+    message {
+        is_AbsPath($_) ? File->get_message($_) : AbsPath->get_message($_);
+    };
 
 declare AbsDir,
     as intersection([AbsPath, Dir]),
-    message { "Directory '$_' does not exist" };
+    message {
+        is_AbsPath($_) ? Dir->get_message($_) : AbsPath->get_message($_);
+    };
 #>>>
 
 for my $type ( Path, File, Dir ) {
