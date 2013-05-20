@@ -86,7 +86,7 @@ for my $type ( AbsPath, AbsFile, AbsDir ) {
   package Foo;
 
   use Moose;
-  use MooseX::Types::Path::Tiny qw/Path AbsPath/;
+  use Types::PathTiny qw/Path AbsPath/;
 
   has filename => (
     is => 'ro',
