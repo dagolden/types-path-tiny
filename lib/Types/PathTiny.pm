@@ -2,7 +2,7 @@ use 5.010;
 use strict;
 use warnings;
 
-package MooseX::Types::Path::Tiny;
+package Types::PathTiny;
 # ABSTRACT: Path::Tiny types and coercions for Moose
 # VERSION
 
