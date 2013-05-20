@@ -6,39 +6,54 @@ package MooseX::Types::Path::Tiny;
 # ABSTRACT: Path::Tiny types and coercions for Moose
 # VERSION
 
-use Moose 2;
-use MooseX::Types::Stringlike qw/Stringable/;
-use MooseX::Types::Moose qw/Str ArrayRef/;
-use MooseX::Types -declare => [qw( Path AbsPath File AbsFile Dir AbsDir )];
-use Path::Tiny ();
+use Path::Tiny qw();
+use Type::Library -base, -declare => qw( Path AbsPath File AbsFile Dir AbsDir );
+use Type::Utils;
+use Types::Standard qw( Str ArrayRef );
+use Types::TypeTiny 0.005 qw( ArrayLike ), StringLike => { -as => "Stringable" };
 
 #<<<
-subtype Path,    as 'Path::Tiny';
-subtype AbsPath, as Path, where { $_->is_absolute };
+class_type Path, { class => "Path::Tiny" };
 
-subtype File,    as Path, where { $_->is_file }, message { "File '$_' does not exist" };
-subtype Dir,     as Path, where { $_->is_dir },  message { "Directory '$_' does not exist" };
+declare AbsPath,
+    as Path, where { $_->is_absolute },
+    inline_as { $_[0]->parent->inline_check($_) . "&& ${_}->is_absolute" };
 
-subtype AbsFile, as AbsPath, where { $_->is_file }, message { "File '$_' does not exist" };
-subtype AbsDir,  as AbsPath, where { $_->is_dir },  message { "Directory '$_' does not exist" };
+declare File,
+    as Path, where { $_->is_file },
+    inline_as { $_[0]->parent->inline_check($_) . "&& (-f $_)" },
+    message   { "File '$_' does not exist" };
+
+declare Dir,
+    as Path, where { $_->is_dir },
+    inline_as { $_[0]->parent->inline_check($_) . "&& (-d $_)" },
+    message   { "Directory '$_' does not exist" };
+
+declare AbsFile,
+    as intersection([AbsPath, File]),
+    message { "File '$_' does not exist" };
+
+declare AbsDir,
+    as intersection([AbsPath, Dir]),
+    message { "Directory '$_' does not exist" };
 #>>>
 
-for my $type ( 'Path::Tiny', Path, File, Dir ) {
+for my $type ( Path, File, Dir ) {
     coerce(
         $type,
-        from Str()        => via { Path::Tiny::path($_) },
-        from Stringable() => via { Path::Tiny::path($_) },
-        from ArrayRef()   => via { Path::Tiny::path(@$_) },
+        from Str()        => q{ Path::Tiny::path($_) },
+        from Stringable() => q{ Path::Tiny::path($_) },
+        from ArrayRef()   => q{ Path::Tiny::path(@$_) },
     );
 }
 
 for my $type ( AbsPath, AbsFile, AbsDir ) {
     coerce(
         $type,
-        from 'Path::Tiny' => via { $_->absolute },
-        from Str()        => via { Path::Tiny::path($_)->absolute },
-        from Stringable() => via { Path::Tiny::path($_)->absolute },
-        from ArrayRef()   => via { Path::Tiny::path(@$_)->absolute },
+        from Path         => q{ $_->absolute },
+        from Str()        => q{ Path::Tiny::path($_)->absolute },
+        from Stringable() => q{ Path::Tiny::path($_)->absolute },
+        from ArrayRef()   => q{ Path::Tiny::path(@$_)->absolute },
     );
 }
 
@@ -81,8 +96,10 @@ for my $type ( AbsPath, AbsFile, AbsDir ) {
 
 =head1 DESCRIPTION
 
-This module provides L<Path::Tiny> types for Moose.  It handles
-two important types of coercion:
+This module provides L<Path::Tiny> types for Moose. (Despite the name,
+it will also work with Moo and Mouse.)
+
+It handles two important types of coercion:
 
 =for :list
 * coercing objects with overloaded stringification
@@ -92,7 +109,7 @@ It also can check to ensure that files or directories exist.
 
 =head1 SUBTYPES
 
-This module uses L<MooseX::Types> to define the following subtypes.
+This module uses L<Type::Tiny> to define the following subtypes.
 
 =head2 Path
 

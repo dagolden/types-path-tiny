@@ -2,6 +2,8 @@ use 5.010;
 use strict;
 use warnings;
 use Test::More 0.96;
+use Test::Requires { "Moose" => 2.0000 };
+
 use File::Temp 0.18;
 use File::pushd qw/tempd/;
 use Path::Tiny;

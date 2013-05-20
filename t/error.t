@@ -2,7 +2,10 @@ use 5.010;
 use strict;
 use warnings;
 use Test::More 0.96;
+use Test::Requires { "Test::Fatal" => 0 };
+use Test::Requires { "Moose" => 2.0000 };
 use Test::Fatal;
+
 use Path::Tiny;
 
 {
