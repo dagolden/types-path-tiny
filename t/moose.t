@@ -2,11 +2,33 @@ use 5.010;
 use strict;
 use warnings;
 use Test::More 0.96;
+use Test::Requires { "Moose" => 2.0000 };
 
 use File::Temp 0.18;
 use File::pushd qw/tempd/;
 use Path::Tiny;
-use Types::PathTiny -types;
+
+{
+
+    package Foo;
+    use Moose;
+    use MooseX::Types::Path::Tiny qw/Path File Dir/;
+
+    has a_path => ( is => 'ro', isa => Path, coerce => 1 );
+    has a_file => ( is => 'ro', isa => File, coerce => 1 );
+    has a_dir  => ( is => 'ro', isa => Dir,  coerce => 1 );
+}
+
+{
+
+    package AbsFoo;
+    use Moose;
+    use MooseX::Types::Path::Tiny qw/AbsPath AbsFile AbsDir/;
+
+    has a_path => ( is => 'ro', isa => AbsPath, coerce => 1 );
+    has a_file => ( is => 'ro', isa => AbsFile, coerce => 1 );
+    has a_dir  => ( is => 'ro', isa => AbsDir,  coerce => 1 );
+}
 
 my $tf = File::Temp->new;
 my $td = File::Temp->newdir;
@@ -15,102 +37,121 @@ my @cases = (
     # Path
     {
         label    => "coerce string to Path",
-        type     => Path,
+        absolute => 0,
+        attr     => "a_path",
         input    => "./foo",
     },
     {
         label    => "coerce object to Path",
-        type     => Path,
+        absolute => 0,
+        attr     => "a_path",
         input    => $tf,
     },
     {
         label    => "coerce array ref to Path",
-        type     => Path,
+        absolute => 0,
+        attr     => "a_path",
         input    => [qw/foo bar/],
     },
     # AbsPath
     {
         label    => "coerce string to AbsPath",
-        type     => AbsPath,
+        absolute => 1,
+        attr     => "a_path",
         input    => "./foo",
     },
     {
         label    => "coerce Path to AbsPath",
-        type     => AbsPath,
+        absolute => 1,
+        attr     => "a_path",
         input    => path($tf),
     },
     {
         label    => "coerce object to AbsPath",
-        type     => AbsPath,
+        absolute => 1,
+        attr     => "a_path",
         input    => $tf,
     },
     {
         label    => "coerce array ref to AbsPath",
-        type     => AbsPath,
+        absolute => 1,
+        attr     => "a_path",
         input    => [qw/foo bar/],
     },
     # File
     {
         label    => "coerce string to File",
-        type     => File,
+        absolute => 0,
+        attr     => "a_file",
         input    => "$tf",
     },
     {
         label    => "coerce object to File",
-        type     => File,
+        absolute => 0,
+        attr     => "a_file",
         input    => $tf,
     },
     {
         label    => "coerce array ref to File",
-        type     => File,
+        absolute => 0,
+        attr     => "a_file",
         input    => [$tf],
     },
     # Dir
     {
         label    => "coerce string to Dir",
-        type     => Dir,
+        absolute => 0,
+        attr     => "a_dir",
         input    => "$td",
     },
     {
         label    => "coerce object to Dir",
-        type     => Dir,
+        absolute => 0,
+        attr     => "a_dir",
         input    => $td,
     },
     {
         label    => "coerce array ref to Dir",
-        type     => Dir,
+        absolute => 0,
+        attr     => "a_dir",
         input    => [$td],
     },
     # AbsFile
     {
         label    => "coerce string to AbsFile",
-        type     => AbsFile,
+        absolute => 1,
+        attr     => "a_file",
         input    => "$tf",
     },
     {
         label    => "coerce object to AbsFile",
-        type     => AbsFile,
+        absolute => 1,
+        attr     => "a_file",
         input    => $tf,
     },
     {
         label    => "coerce array ref to AbsFile",
-        type     => AbsFile,
+        absolute => 1,
+        attr     => "a_file",
         input    => [$tf],
     },
     # AbsDir
     {
         label    => "coerce string to AbsDir",
-        type     => AbsDir,
+        absolute => 1,
+        attr     => "a_dir",
         input    => "$td",
     },
     {
         label    => "coerce object to AbsDir",
-        type     => AbsDir,
+        absolute => 1,
+        attr     => "a_dir",
         input    => $td,
     },
     {
         label    => "coerce array ref to AbsDir",
-        type     => AbsDir,
+        absolute => 1,
+        attr     => "a_dir",
         input    => [$td],
     },
 );
@@ -118,15 +159,16 @@ my @cases = (
 for my $c (@cases) {
     subtest $c->{label} => sub {
         my $wd       = tempd;
-        my $type     = $c->{type};
+        my $class    = $c->{absolute} ? "AbsFoo" : "Foo";
+        my $attr     = $c->{attr};
         my $input    = $c->{input};
         my $expected = path( ref $input eq 'ARRAY' ? @$input : $input );
-        $expected = $expected->absolute if $type =~ /^Abs/;
+        $expected = $expected->absolute if $c->{absolute};
 
-        my $output = eval { $type->assert_coerce( $input ); };
+        my $obj = eval { $class->new( $attr => $input ); };
         is( $@, '', "object created without exception" );
-        isa_ok( $output, "Path::Tiny", '$output' );
-        is( $output, $expected, '$output is as expected' );
+        isa_ok( $obj->$attr, "Path::Tiny", $attr );
+        is( $obj->$attr, $expected, "$attr set correctly" );
     };
 }
 
