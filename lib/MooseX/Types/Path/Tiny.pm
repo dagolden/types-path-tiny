@@ -10,7 +10,7 @@ use Path::Tiny qw();
 use Type::Library -base, -declare => qw( Path AbsPath File AbsFile Dir AbsDir );
 use Type::Utils;
 use Types::Standard qw( Str ArrayRef );
-use Types::TypeTiny 0.005 qw( ArrayLike ), StringLike => { -as => "Stringable" };
+use Types::TypeTiny 0.004 StringLike => { -as => "Stringable" };
 
 #<<<
 class_type Path, { class => "Path::Tiny" };
