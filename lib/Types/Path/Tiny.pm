@@ -1,9 +1,9 @@
-use 5.010;
+use 5.008001;
 use strict;
 use warnings;
 
-package Types::PathTiny;
-# ABSTRACT: Path::Tiny types and coercions for Moose
+package Types::Path::Tiny;
+# ABSTRACT: Path::Tiny types and coercions for Moose and Moo
 # VERSION
 
 use Path::Tiny qw();
@@ -86,7 +86,7 @@ for my $type ( AbsPath, AbsFile, AbsDir ) {
   package Foo;
 
   use Moose;
-  use Types::PathTiny qw/Path AbsPath/;
+  use Types::Path::Tiny qw/Path AbsPath/;
 
   has filename => (
     is => 'ro',
@@ -107,8 +107,7 @@ for my $type ( AbsPath, AbsFile, AbsDir ) {
 
 =head1 DESCRIPTION
 
-This module provides L<Path::Tiny> types for Moose. (Despite the name,
-it will also work with Moo and Mouse.)
+This module provides L<Path::Tiny> types for Moose, Moo, etc.
 
 It handles two important types of coercion:
 

@@ -1,4 +1,3 @@
-use 5.010;
 use strict;
 use warnings;
 use Test::More 0.96;
@@ -6,7 +5,7 @@ use Test::More 0.96;
 use File::Temp 0.18;
 use File::pushd qw/tempd/;
 use Path::Tiny;
-use Types::PathTiny -types;
+use Types::Path::Tiny -types;
 
 my $tf = File::Temp->new;
 my $td = File::Temp->newdir;
