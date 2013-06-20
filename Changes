@@ -2,6 +2,10 @@ Revision history for MooseX-Types-Path-Tiny
 
 {{$NEXT}}
 
+    - Converted to Type::Tiny; works with Moose or Moo now
+
+    - Dropped Perl prereq to v5.8.1
+
 0.002     2013-02-12 09:35:41 America/New_York
 
     - Bump Moose version prereq to 2, just in case anyone out there still
