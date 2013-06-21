@@ -2,6 +2,8 @@ Revision history for MooseX-Types-Path-Tiny
 
 {{$NEXT}}
 
+    - Bumped Type::Tiny prereq to avoid known bugs in it
+
 0.003     2013-06-20 16:01:13 America/New_York
 
     - Converted to Type::Tiny; works with Moose or Moo now

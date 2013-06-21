@@ -41,7 +41,7 @@
       "runtime" : {
          "requires" : {
             "Path::Tiny" : "0",
-            "Type::Library" : "0",
+            "Type::Library" : "0.008",
             "Type::Utils" : "0",
             "Types::Standard" : "0",
             "Types::TypeTiny" : "0.004",
@@ -68,11 +68,11 @@
    "provides" : {
       "MooseX::Types::Path::Tiny" : {
          "file" : "lib/MooseX/Types/Path/Tiny.pm",
-         "version" : "0.003"
+         "version" : "0.004"
       },
       "Types::Path::Tiny" : {
          "file" : "lib/Types/Path/Tiny.pm",
-         "version" : "0.003"
+         "version" : "0.004"
       }
    },
    "release_status" : "stable",
@@ -87,7 +87,7 @@
          "web" : "https://github.com/dagolden/types-path-tiny"
       }
    },
-   "version" : "0.003",
+   "version" : "0.004",
    "x_contributors" : [
       "Toby Inkster <tobyink@cpan.org>"
    ]
