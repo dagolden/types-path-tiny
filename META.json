@@ -4,7 +4,7 @@
       "David Golden <dagolden@cpan.org>"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "Dist::Zilla version 4.300034, CPAN::Meta::Converter version 2.131560",
+   "generated_by" : "Dist::Zilla version 4.300035, CPAN::Meta::Converter version 2.132140",
    "license" : [
       "apache_2_0"
    ],
@@ -65,7 +65,7 @@
    "provides" : {
       "Types::Path::Tiny" : {
          "file" : "lib/Types/Path/Tiny.pm",
-         "version" : "0.005"
+         "version" : "0.006"
       }
    },
    "release_status" : "stable",
@@ -80,8 +80,10 @@
          "web" : "https://github.com/dagolden/types-path-tiny"
       }
    },
-   "version" : "0.005",
+   "version" : "0.006",
+   "x_authority" : "cpan:DAGOLDEN",
    "x_contributors" : [
+      "Hobbestigrou <natal.ngetal@novapost.fr>",
       "Toby Inkster <tobyink@cpan.org>"
    ]
 }

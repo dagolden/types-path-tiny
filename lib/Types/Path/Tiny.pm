@@ -81,6 +81,8 @@ for my $type ( AbsPath, AbsFile, AbsDir ) {
 
 =head1 SYNOPSIS
 
+Example with Moose:
+
   ### specification of type constraint with coercion
 
   package Foo;
@@ -107,6 +109,8 @@ for my $type ( AbsPath, AbsFile, AbsDir ) {
 
 Example with Moo:
 
+    ### specification of type constraint with coercion
+
     package Foo;
 
     use Moo;
@@ -124,8 +128,9 @@ Example with Moo:
         }
     );
 
-    Foo->new( directory => '/home/user/' );
+    ### usage in code
 
+    Foo->new( directory => '.' ); # coerced to path('.')->absolute
 
 =head1 DESCRIPTION
 

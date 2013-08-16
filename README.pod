@@ -8,9 +8,11 @@ Types::Path::Tiny - Path::Tiny types and coercions for Moose and Moo
 
 =head1 VERSION
 
-version 0.005
+version 0.006
 
 =head1 SYNOPSIS
+
+Example with Moose:
 
   ### specification of type constraint with coercion
 
@@ -35,6 +37,31 @@ version 0.005
 
   Foo->new( filename => 'foo.txt' ); # coerced to Path::Tiny
   Foo->new( directory => '.' ); # coerced to path('.')->absolute
+
+Example with Moo:
+
+    ### specification of type constraint with coercion
+
+    package Foo;
+
+    use Moo;
+    use Types::Path::Tiny qw/Path AbsPath/;
+    use Path::Tiny qw( path );
+
+    has 'directory' => (
+        is       => 'rw',
+        isa      => AbsPath,
+        required => 1,
+        coerce   => sub {
+            my ( $dir ) = @_;
+
+            return path($dir);
+        }
+    );
+
+    ### usage in code
+
+    Foo->new( directory => '.' ); # coerced to path('.')->absolute
 
 =head1 DESCRIPTION
 
@@ -140,9 +167,19 @@ L<https://github.com/dagolden/types-path-tiny>
 
 David Golden <dagolden@cpan.org>
 
-=head1 CONTRIBUTOR
+=head1 CONTRIBUTORS
+
+=over 4
+
+=item *
+
+Hobbestigrou <natal.ngetal@novapost.fr>
+
+=item *
 
 Toby Inkster <tobyink@cpan.org>
+
+=back
 
 =head1 COPYRIGHT AND LICENSE
 
