@@ -105,6 +105,28 @@ for my $type ( AbsPath, AbsFile, AbsDir ) {
   Foo->new( filename => 'foo.txt' ); # coerced to Path::Tiny
   Foo->new( directory => '.' ); # coerced to path('.')->absolute
 
+Example with Moo:
+
+    package Foo;
+
+    use Moo;
+    use Types::Path::Tiny qw/Path AbsPath/;
+    use Path::Tiny qw( path );
+
+    has 'directory' => (
+        is       => 'rw',
+        isa      => AbsPath,
+        required => 1,
+        coerce   => sub {
+            my ( $dir ) = @_;
+
+            return path($dir);
+        }
+    );
+
+    Foo->new( directory => '/home/user/' );
+
+
 =head1 DESCRIPTION
 
 This module provides L<Path::Tiny> types for Moose, Moo, etc.
