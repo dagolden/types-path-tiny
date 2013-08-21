@@ -52,13 +52,14 @@
       },
       "test" : {
          "requires" : {
+            "Capture::Tiny" : "0",
             "ExtUtils::MakeMaker" : "0",
-            "File::Find" : "0",
             "File::Spec::Functions" : "0",
             "File::Temp" : "0.18",
             "File::pushd" : "0",
             "List::Util" : "0",
-            "Test::More" : "0.96"
+            "Test::More" : "0.96",
+            "blib" : "0"
          }
       }
    },
@@ -83,6 +84,7 @@
    "version" : "0.006",
    "x_authority" : "cpan:DAGOLDEN",
    "x_contributors" : [
+      "Hobbestigrou <hobbestigrou@erakis.eu>",
       "Hobbestigrou <natal.ngetal@novapost.fr>",
       "Toby Inkster <tobyink@cpan.org>"
    ]
